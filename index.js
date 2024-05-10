@@ -45,7 +45,11 @@ async function run() {
           const data = req.body;
           const result = await addedCollection.insertOne(data);
           res.send(result);
-    })
+      });
+      app.get("/addeditems", async (req, res) => {
+        const cursor = await addedCollection.find().toArray();
+        res.send(cursor);  
+      });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
