@@ -41,6 +41,12 @@ async function run() {
          const result = await foodCollection.findOne(query);
          res.send(result);
        });
+      app.get("/addeditems/:id", async(req, res) => {
+          const id = req.params.id;
+          const query = { _id: new ObjectId(id) };
+          const result = await addedCollection.findOne(query);
+          res.send(result);
+      });
       app.post("/added", async (req, res) => {
           const data = req.body;
           const result = await addedCollection.insertOne(data);
