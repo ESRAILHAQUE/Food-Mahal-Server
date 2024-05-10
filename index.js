@@ -23,6 +23,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
       const foodCollection = client.db('foodMahalDB').collection('foodCollection');
+      const addedCollection = client.db('foodMahalDB').collection('addedCollection');
       app.get('/allfoods', async(req, res) => {
           const cursor = await foodCollection.find().toArray();
           res.send(cursor);
@@ -33,8 +34,18 @@ async function run() {
           const query={_id: new ObjectId(id)}
          const result = await foodCollection.findOne(query)
          res.send(result);
+      });
+       app.get("/purchase/:id", async (req, res) => {
+         const id = req.params.id;
+         const query = { _id: new ObjectId(id) };
+         const result = await foodCollection.findOne(query);
+         res.send(result);
        });
-    
+      app.post("/added", async (req, res) => {
+          const data = req.body;
+          const result = await addedCollection.insertOne(data);
+          res.send(result);
+    })
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
