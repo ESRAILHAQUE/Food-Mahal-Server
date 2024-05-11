@@ -24,6 +24,7 @@ async function run() {
   try {
       const foodCollection = client.db('foodMahalDB').collection('foodCollection');
       const addedCollection = client.db('foodMahalDB').collection('addedCollection');
+      const bookingsCollection = client.db('foodMahalDB').collection('bookingsCollection');
       app.get('/allfoods', async(req, res) => {
           const cursor = await foodCollection.find().toArray();
           res.send(cursor);
@@ -45,15 +46,24 @@ async function run() {
           const id = req.params.id;
           const query = { _id: new ObjectId(id) };
           const result = await addedCollection.findOne(query);
-          res.send(result);
+          res.send(result); 
       });
       app.post("/added", async (req, res) => {
           const data = req.body;
           const result = await addedCollection.insertOne(data);
           res.send(result);
       });
+      app.post("/bookings", async (req, res) => {
+          const data = req.body;
+          const result = await bookingsCollection.insertOne(data);
+          res.send(result);
+      })
       app.get("/addeditems", async (req, res) => {
-        const cursor = await addedCollection.find().toArray();
+          let query = {};
+          if (req.query?.email) {
+              query={email: req.query.email}
+          }
+        const cursor = await addedCollection.find(query).toArray();
         res.send(cursor);  
       });
     console.log(
