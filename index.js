@@ -66,6 +66,20 @@ async function run() {
         const cursor = await addedCollection.find(query).toArray();
         res.send(cursor);  
       });
+      app.get("/bookingsitem", async (req, res) => {
+          let query = {};
+          if (req.query?.email) {
+              query={email: req.query.email}
+          }
+          const result = await bookingsCollection.find(query).toArray();
+          res.send(result);
+      })
+      app.delete("/bookings/:id", (req, res) => {
+          const id = req.params.id;
+          const query = { _id: new ObjectId(id) };
+          const result = bookingsCollection.deleteOne(query);
+          res.send(result)
+      })
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
