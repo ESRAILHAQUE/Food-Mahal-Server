@@ -115,11 +115,31 @@ async function run() {
         const id = req.params.id;
         const query = { _id: new ObjectId(id) };
         const result = await foodCollection.updateOne(query, {
-          $inc: { count: 1 },
+          $inc: { count: 1, quantity: -1 },
         });
         res.send(result);
       
     });
+    app.put('/update/:id', async(req, res) => {
+      const id = req.params.id;
+      product = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options={upsert:true}
+      const updatedProduct = {
+        $set: {
+          foodName:product.foodName,
+          foodImage:product.foodImage,
+          subCatagory:product.subCatagory,
+          purchaseQuantity:product.purchaseQuantity,
+          currentDate:product.currentDate,
+          price:product.price,
+          origin:product.origin,
+          description:product.description,
+        },
+      };
+      const result = await addedCollection.updateOne(filter, updatedProduct, options)
+      res.send(result)
+    })
 
     app.get("/purchase/:id", async (req, res) => {
       const id = req.params.id;
